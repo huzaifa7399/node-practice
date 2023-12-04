@@ -1,10 +1,13 @@
+require("dotenv").config();
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import DeckModel from "../models";
+import cors from "cors";
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT;
 
+app.use(cors());
 app.use(express.json());
 
 app.post("/deck", async (req: Request, res: Response) => {
@@ -16,7 +19,7 @@ app.post("/deck", async (req: Request, res: Response) => {
   res.json(createdDeck);
 });
 
-mongoose.connect("mongodb://127.0.0.1:27017/test").then(() => {
+mongoose.connect(process.env.MONGO_URL ?? "").then(() => {
   console.log("listening on port ", PORT);
   app.listen(PORT);
 });
