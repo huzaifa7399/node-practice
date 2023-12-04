@@ -10,6 +10,12 @@ const PORT = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 
+app.get("/deck", async (req: Request, res: Response) => {
+  const decks = await DeckModel.find();
+  // console.log(decks);
+  res.json(decks);
+});
+
 app.post("/deck", async (req: Request, res: Response) => {
   const data = req.body;
   const newDeck = new DeckModel({

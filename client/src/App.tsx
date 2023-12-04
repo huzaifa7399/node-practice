@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
   const [title, setTitle] = useState("");
-
+  const [decks, setDecks] = useState([]);
   const handleCardCreation = async () => {
-    const resp = await fetch("http://localhost:5000/deck", {
+    await fetch("http://localhost:5000/deck", {
       headers: {
         "Content-type": "application/json",
       },
@@ -14,9 +14,18 @@ function App() {
         title: title,
       }),
     });
-    console.log(resp, title);
+    setTitle("");
   };
 
+  const getAllCards = async () => {
+    const resp = await fetch("http://localhost:5000/deck");
+    const data = await resp.json();
+    setDecks(data);
+  };
+
+  useEffect(() => {
+    getAllCards();
+  }, []);
   return (
     <>
       <div>
@@ -26,10 +35,20 @@ function App() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-      </div>
-      <div className="card">
         <button onClick={handleCardCreation}>Add Cards</button>
       </div>
+      {decks.map(({ title }, idx) => {
+        return (
+          <div
+            key={idx}
+            style={{
+              display: "grid",
+            }}
+          >
+            <h1>{title}</h1>
+          </div>
+        );
+      })}
     </>
   );
 }
