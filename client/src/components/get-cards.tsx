@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./App.css";
+import { TDeck } from "../App";
 
-export type TDeck = {
-  title: string;
-  _id: string;
-};
-
-function App() {
+const GetCards = () => {
   const [title, setTitle] = useState("");
   const [decks, setDecks] = useState<TDeck[]>([]);
 
@@ -60,7 +55,7 @@ function App() {
             setTitle(e.target.value)
           }
         />
-        <button onClick={handleCardCreation}>Add Decks</button>
+        <button onClick={handleCardCreation}>Add Cards</button>
       </div>
 
       {decks.map(({ title, _id }: TDeck) => {
@@ -88,6 +83,6 @@ function App() {
       })}
     </>
   );
-}
+};
 
-export default App;
+export default GetCards;
