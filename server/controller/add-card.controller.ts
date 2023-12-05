@@ -9,4 +9,5 @@ export const AddCardController = async (req: Request, res: Response) => {
   deck.cards.push(text);
   await deck.save();
   res.json(deck);
+  console.log("successfully added card", text);
 };

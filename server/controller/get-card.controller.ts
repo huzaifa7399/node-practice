@@ -6,4 +6,5 @@ export const GetCardController = async (req: Request, res: Response) => {
   const deck = await DeckModel.findById(deckId);
   if (!deck) return res.status(400).send("No Deck found with this id");
   res.json(deck.cards);
+  console.log("successfully fetched cards", deck.cards);
 };

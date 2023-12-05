@@ -1,7 +1,6 @@
 require("dotenv").config();
-import express, { Request, Response } from "express";
+import express from "express";
 import mongoose from "mongoose";
-import DeckModel from "../models";
 import cors from "cors";
 import { GetDeckController } from "../controller/get-deck.controller";
 import { AddDeckController } from "../controller/add-deck.controller";
@@ -24,7 +23,7 @@ app.post("/deck/:deckId/create-card", AddCardController);
 app.get("/deck/:deckId/get-card", GetCardController);
 app.delete("/deck/:deckId/cards/:cardId", DeleteCardController);
 
-mongoose.connect(process.env.MONGO_URL ?? "").then(() => {
+mongoose.connect(process.env.MONGO_URL!).then(() => {
   console.log("listening on port ", PORT);
   app.listen(PORT);
 });
