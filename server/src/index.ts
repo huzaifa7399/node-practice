@@ -19,8 +19,8 @@ app.get("/deck", GetDeckController);
 app.post("/deck", AddDeckController);
 app.delete("/deck/:deckId", DeleteDeckController);
 
-app.post("/deck/:deckId/create-card", AddCardController);
 app.get("/deck/:deckId/get-card", GetCardController);
+app.post("/deck/:deckId/create-card", AddCardController);
 app.delete("/deck/:deckId/cards/:cardId", DeleteCardController);
 
 mongoose.connect(process.env.MONGO_URL!).then(() => {

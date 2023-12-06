@@ -1,44 +1,48 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { TDeck } from "../App";
+import { useParams } from "react-router-dom";
 
 const GetCards = () => {
+  const { cardId } = useParams();
   const [title, setTitle] = useState("");
-  const [decks, setDecks] = useState<TDeck[]>([]);
-
-  const getAllCards = async () => {
-    const resp = await fetch("http://localhost:5000/deck");
-    const data = await resp.json();
-    setDecks(data);
-  };
+  const [cards, setCards] = useState<string[]>([]);
 
   const handleCardCreation = async () => {
-    await fetch("http://localhost:5000/deck", {
+    await fetch(`http://localhost:5000/deck/${cardId}/create-card`, {
       headers: {
         "Content-type": "application/json",
       },
       method: "POST",
       body: JSON.stringify({
-        title: title,
+        text: title,
       }),
     });
+    setCards((prev) => {
+      return [...prev, title];
+    });
     setTitle("");
-    getAllCards();
   };
 
-  const handleCardDelete = async (id: string) => {
-    const resp = await fetch(`http://localhost:5000/deck/${id}`, {
-      method: "DELETE",
-    });
-    const data = await resp.json();
-    if (data.message === "successfully deleted") {
-      setDecks(decks.filter((deck) => deck._id !== id));
+  const handleCardDelete = async (id: number) => {
+    const resp = await fetch(
+      `http://localhost:5000/deck/${cardId}/cards/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (resp.status === 200) {
+      setCards((prev) => prev.splice(id, 0));
     }
   };
 
   useEffect(() => {
+    const getAllCards = async () => {
+      if (!cardId) return;
+      const resp = await fetch(`http://localhost:5000/deck/${cardId}/get-card`);
+      const data = await resp.json();
+      setCards(data);
+    };
     getAllCards();
-  }, []);
+  }, [cardId]);
 
   return (
     <>
@@ -58,22 +62,21 @@ const GetCards = () => {
         <button onClick={handleCardCreation}>Add Cards</button>
       </div>
 
-      {decks.map(({ title, _id }: TDeck) => {
+      {cards?.map((card, idx) => {
         return (
           <div
-            key={_id}
+            key={idx}
             style={{
               display: "flex",
               gap: "10px",
               justifyContent: "space-between",
             }}
           >
-            <Link to={`/cards/${_id}`}>
-              <h4>{title}</h4>
-            </Link>
+            <h4>{card}</h4>
+
             <button
               onClick={() => {
-                handleCardDelete(_id);
+                handleCardDelete(idx);
               }}
             >
               delete
