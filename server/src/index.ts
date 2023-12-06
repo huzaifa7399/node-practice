@@ -2,13 +2,15 @@ require("dotenv").config();
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import { GetDeckController } from "../controller/get-deck.controller";
-import { AddDeckController } from "../controller/add-deck.controller";
-import { DeleteDeckController } from "../controller/delete-deck.controller";
-import { AddCardController } from "../controller/add-card.controller";
-import { GetCardController } from "../controller/get-card.controller";
-import { DeleteCardController } from "../controller/delete-card.controller";
-import { UpdateDeckTitleController } from "../controller/update-deck-title.controller";
+import {
+  GetDeckController,
+  AddCardController,
+  AddDeckController,
+  DeleteCardController,
+  DeleteDeckController,
+  GetCardController,
+  UpdateDeckTitleController,
+} from "../controller";
 
 const app = express();
 const PORT = process.env.PORT;

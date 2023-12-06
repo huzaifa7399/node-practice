@@ -8,7 +8,7 @@ export type TDeck = {
   cards: string[];
 };
 
-function App() {
+const App = () => {
   const [title, setTitle] = useState("");
   const [updateTitle, setUpdateTitle] = useState({
     title: "",
@@ -175,6 +175,6 @@ function App() {
       })}
     </>
   );
-}
+};
 
 export default App;
