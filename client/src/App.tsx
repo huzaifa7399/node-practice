@@ -5,10 +5,12 @@ import "./App.css";
 export type TDeck = {
   title: string;
   _id: string;
+  cards: string[];
 };
 
 function App() {
   const [title, setTitle] = useState("");
+  const [updateTitle, setUpdateTitle] = useState("");
   const [decks, setDecks] = useState<TDeck[]>([]);
 
   const getAllCards = async () => {
@@ -47,34 +49,66 @@ function App() {
 
   return (
     <>
-      <div
-        style={{
-          marginBottom: "30px",
-        }}
-      >
-        <input
-          type="text"
-          name="text"
-          value={title}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setTitle(e.target.value)
-          }
-        />
-        <button onClick={handleCardCreation}>Add Decks</button>
-      </div>
+      {updateTitle === "" ? (
+        <div
+          style={{
+            marginBottom: "30px",
+            display: "flex",
+            gap: "10px",
+            justifyContent: "space-between",
+          }}
+        >
+          <input
+            type="text"
+            name="text"
+            value={title}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setTitle(e.target.value)
+            }
+          />
+          <button onClick={handleCardCreation}>Add Deck</button>
+        </div>
+      ) : (
+        <div
+          style={{
+            marginBottom: "30px",
+            display: "flex",
+            gap: "10px",
+            justifyContent: "space-between",
+          }}
+        >
+          <input
+            type="text"
+            name="text"
+            value={updateTitle}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setUpdateTitle(e.target.value)
+            }
+          />
+          <button onClick={handleCardCreation}>Update title</button>
+          <button onClick={() => setUpdateTitle("")}>Add new deck</button>
+        </div>
+      )}
 
-      {decks.map(({ title, _id }: TDeck) => {
+      {decks.map(({ title, _id, cards }: TDeck) => {
         return (
           <div
             key={_id}
             style={{
               display: "flex",
               gap: "10px",
-              justifyContent: "space-between",
+              justifyContent: "space-evenly",
+              marginBottom: "10px",
             }}
           >
-            <Link to={`/cards/${_id}`}>
-              <h4>{title}</h4>
+            <Link to={cards.length === 0 ? "" : `/cards/${_id}`}>
+              <h4
+                style={{
+                  width: "200px",
+                }}
+              >
+                {title}
+              </h4>
             </Link>
             <button
               onClick={() => {
@@ -82,6 +116,13 @@ function App() {
               }}
             >
               delete
+            </button>
+            <button
+              onClick={() => {
+                setUpdateTitle(title);
+              }}
+            >
+              update
             </button>
           </div>
         );

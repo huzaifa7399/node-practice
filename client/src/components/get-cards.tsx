@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const GetCards = () => {
   const { cardId } = useParams();
@@ -51,6 +51,7 @@ const GetCards = () => {
           marginBottom: "30px",
         }}
       >
+        <Link to={"/"}>{"<--"}</Link>
         <input
           type="text"
           name="text"
