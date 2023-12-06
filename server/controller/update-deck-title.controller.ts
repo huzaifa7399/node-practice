@@ -7,7 +7,6 @@ export const UpdateDeckTitleController = async (
 ) => {
   const deckId = req.params.deckId;
   const { title } = req.body;
-
   await DeckModel.findByIdAndUpdate(deckId, {
     title: title,
   });

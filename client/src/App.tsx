@@ -10,7 +10,10 @@ export type TDeck = {
 
 function App() {
   const [title, setTitle] = useState("");
-  const [updateTitle, setUpdateTitle] = useState("");
+  const [updateTitle, setUpdateTitle] = useState({
+    title: "",
+    id: "",
+  });
   const [decks, setDecks] = useState<TDeck[]>([]);
 
   const getAllCards = async () => {
@@ -33,6 +36,28 @@ function App() {
     getAllCards();
   };
 
+  const updateDeckTitle = async () => {
+    const resp = await fetch(
+      `http://localhost:5000/deck/${updateTitle.id}/update-title`,
+      {
+        headers: {
+          "Content-type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          title: updateTitle.title,
+        }),
+      }
+    );
+    if (resp.status === 200) {
+      setUpdateTitle({
+        id: "",
+        title: "",
+      });
+      getAllCards();
+    }
+  };
+
   const handleCardDelete = async (id: string) => {
     const resp = await fetch(`http://localhost:5000/deck/${id}`, {
       method: "DELETE",
@@ -49,7 +74,7 @@ function App() {
 
   return (
     <>
-      {updateTitle === "" ? (
+      {updateTitle.title === "" ? (
         <div
           style={{
             marginBottom: "30px",
@@ -80,17 +105,33 @@ function App() {
           <input
             type="text"
             name="text"
-            value={updateTitle}
+            value={updateTitle.title}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setUpdateTitle(e.target.value)
+              setUpdateTitle((prev) => {
+                return {
+                  ...prev,
+                  title: e.target.value,
+                };
+              })
             }
           />
-          <button onClick={handleCardCreation}>Update title</button>
-          <button onClick={() => setUpdateTitle("")}>Add new deck</button>
+          <button onClick={updateDeckTitle}>Update title</button>
+          <button
+            onClick={() =>
+              setUpdateTitle((prev) => {
+                return {
+                  ...prev,
+                  title: "",
+                };
+              })
+            }
+          >
+            Add new deck
+          </button>
         </div>
       )}
 
-      {decks.map(({ title, _id, cards }: TDeck) => {
+      {decks.map(({ title, _id }: TDeck) => {
         return (
           <div
             key={_id}
@@ -101,7 +142,7 @@ function App() {
               marginBottom: "10px",
             }}
           >
-            <Link to={cards.length === 0 ? "" : `/cards/${_id}`}>
+            <Link to={`/cards/${_id}`}>
               <h4
                 style={{
                   width: "200px",
@@ -119,7 +160,12 @@ function App() {
             </button>
             <button
               onClick={() => {
-                setUpdateTitle(title);
+                setUpdateTitle(() => {
+                  return {
+                    title: title,
+                    id: _id,
+                  };
+                });
               }}
             >
               update
